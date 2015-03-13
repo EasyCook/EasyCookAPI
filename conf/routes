@@ -1,0 +1,29 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+
+# Map static resources from the /public folder to the /assets URL path
+GET            /assets/*file                      controllers.Assets.at(path="/public", file)
+
+#Security
+POST           /signup                            @controllers.SecurityController.signUp()
+POST           /login                             @controllers.SecurityController.login()
+GET            /logout                            @controllers.SecurityController.logout()
+
+#User
+GET            /users                             @controllers.UserController.getAllUsers()
+GET            /users/:userId                     @controllers.UserController.getUser(userId: Long)
+PUT            /users/:userId                     @controllers.UserController.updateUser(userId: Long)
+DELETE         /users/:userId                     @controllers.UserController.deleteUser(userId: Long)
+
+#Recipe
+GET            /recipes/:recipeId                 @controllers.RecipeController.getRecipe(recipeId: Long)
+GET            /recipes/:recipeId/category        @controllers.RecipeController.getRecipeCategory(recipeId: Long)
+#Category
+GET            /category/:slug                    @controllers.CategoryController.getCategoryBySlug(slug: String)
+
+
+OPTIONS        /*path                             @controllers.Application.checkPreFlight(path: String)
+
