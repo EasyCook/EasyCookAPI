@@ -11,4 +11,5 @@ import javax.persistence.Entity;
 @Entity
 public class Unit extends AbstractEntity{
     String name;
+	String description;
 }
