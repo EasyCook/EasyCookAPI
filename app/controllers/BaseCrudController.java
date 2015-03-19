@@ -56,7 +56,7 @@ public abstract class BaseCrudController<T extends AbstractEntity> extends Contr
 
 		try
 		{
-			object = ( T ) dao.update( id, object );
+			object =  dao.update( id, object );
 		}
 		catch( NotFoundException e )
 		{
@@ -87,5 +87,9 @@ public abstract class BaseCrudController<T extends AbstractEntity> extends Contr
 		}
 
 		return ok(  );
+	}
+
+	public void objectMapper(Object src, Object target){
+		dao.myCopyProperties( src,target );
 	}
 }
