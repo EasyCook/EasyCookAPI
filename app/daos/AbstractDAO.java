@@ -7,6 +7,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Named;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.Set;
 /**
  * Created by eduardo on 12/03/15.
  */
+@Named
+@Transactional
 public abstract class AbstractDAO < T extends AbstractEntity, I extends Serializable >
 {
 	JpaRepository< T, I > repo;
@@ -118,7 +121,7 @@ public abstract class AbstractDAO < T extends AbstractEntity, I extends Serializ
 
 
 
-	public static String[] getNullPropertyNames (Object source) {
+	public  String[] getNullPropertyNames (Object source) {
 		final BeanWrapper src = new BeanWrapperImpl(source);
 		java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
 
@@ -132,7 +135,7 @@ public abstract class AbstractDAO < T extends AbstractEntity, I extends Serializ
 	}
 
 	// then use Spring BeanUtils to copy and ignore null
-	public static void myCopyProperties(Object src, Object target) {
+	public  void myCopyProperties(Object src, Object target) {
 		BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
 	}
 
