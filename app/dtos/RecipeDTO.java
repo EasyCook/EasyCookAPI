@@ -1,6 +1,5 @@
 package dtos;
 
-import models.recipes.Ingredient;
 import models.recipes.RecipeIngredient;
 import models.recipes.RecipeStep;
 import models.recipes.Unit;
@@ -21,7 +20,7 @@ public class RecipeDTO
 	 * id : (integer)
 	 * name : (string)
 	 * quantity : (string)
-	 * metric : (string),
+	 * timeUnit : (string),
 	 * }
 	 * ]
 	 * difficulty : (integer)
@@ -34,7 +33,7 @@ public class RecipeDTO
 	 * calories : (interger)
 	 * cooking_time : {
 	 * time : (integer)
-	 * metric : (string)
+	 * timeUnit : (string)
 	 * }
 	 * author : {
 	 * id : (integer)
@@ -52,7 +51,7 @@ public class RecipeDTO
 	String                   thumbnail;
 	Integer                  calories;
 	Long                     cookingTime;
-	Unit                     metric;
+	Unit                     timeUnit;
 	User                     user;
 
 	public Long getId()
@@ -155,14 +154,14 @@ public class RecipeDTO
 		this.cookingTime = cookingTime;
 	}
 
-	public Unit getMetric()
+	public Unit getTimeUnit()
 	{
-		return metric;
+		return timeUnit;
 	}
 
-	public void setMetric( Unit metric )
+	public void setTimeUnit( Unit timeUnit )
 	{
-		this.metric = metric;
+		this.timeUnit = timeUnit;
 	}
 
 	public User getUser()

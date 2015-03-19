@@ -19,14 +19,14 @@ public class CategoryDAO extends AbstractDAO<Category,Long>
 {
 
 	CategoryRepository                   categoryRepository;
-	ObjectUtils< Category, CategoryDTO > categoryUtils;
+
 
 	@Autowired
 	public CategoryDAO( CategoryRepository categoryRepository )
 	{
 		super(categoryRepository);
 		this.categoryRepository = categoryRepository;
-		this.categoryUtils = new ObjectUtils< Category, CategoryDTO >( Category.class, CategoryDTO.class );
+
 	}
 
 
