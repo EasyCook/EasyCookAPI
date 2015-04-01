@@ -3,6 +3,7 @@ package models.recipes;
 import models.AbstractEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
@@ -13,9 +14,30 @@ import javax.persistence.ManyToOne;
 public class RecipeCategory extends AbstractEntity
 {
 	@ManyToOne
-	Recipe recipe;
+
+	public Recipe recipe;
 
 	@ManyToOne
-	Category category;
 
+	public Category category;
+
+	public Recipe getRecipe()
+	{
+		return recipe;
+	}
+
+	public void setRecipe( Recipe recipe )
+	{
+		this.recipe = recipe;
+	}
+
+	public Category getCategory()
+	{
+		return category;
+	}
+
+	public void setCategory( Category category )
+	{
+		this.category = category;
+	}
 }

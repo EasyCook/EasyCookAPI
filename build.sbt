@@ -9,9 +9,9 @@ scalaVersion := "2.11.1"
 libraryDependencies ++= Seq(
   javaCore,
   javaJpa,
-  "org.springframework" % "spring-context" % "4.1.4.RELEASE",
+  "org.springframework" % "spring-context" % "4.1.6.RELEASE",
   "javax.inject" % "javax.inject" % "1",
-  "org.springframework.data" % "spring-data-jpa" % "1.7.2.RELEASE",
+  "org.springframework.data" % "spring-data-jpa" % "1.8.0.RELEASE",
   "org.springframework" % "spring-expression" % "4.1.4.RELEASE",
   "org.hibernate" % "hibernate-entitymanager" % "4.3.8.Final",
   "org.mockito" % "mockito-core" % "1.10.8" % "test",

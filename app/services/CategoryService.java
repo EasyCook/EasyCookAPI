@@ -1,28 +1,25 @@
-package daos;
+package services;
 
-import dtos.CategoryDTO;
 import models.recipes.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import repositories.CategoryRepository;
-import utils.ObjectUtils;
 
 import javax.inject.Named;
-import javax.transaction.Transactional;
-import java.util.List;
+import javax.inject.Singleton;
 
 /**
  * Created by eduardo on 11/03/15.
  */
 @Named
-@Transactional
-public class CategoryDAO extends AbstractDAO<Category,Long>
+@Singleton
+public class CategoryService extends AbstractService<Category,Long>
 {
 
 	CategoryRepository                   categoryRepository;
 
 
 	@Autowired
-	public CategoryDAO( CategoryRepository categoryRepository )
+	public CategoryService( CategoryRepository categoryRepository )
 	{
 		super(categoryRepository);
 		this.categoryRepository = categoryRepository;

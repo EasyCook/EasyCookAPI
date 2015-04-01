@@ -1,4 +1,4 @@
-package daos;
+package services;
 
 
 import Constants.UserLoginStatus;
@@ -14,6 +14,7 @@ import repositories.UserRepository;
 import utils.ObjectUtils;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
@@ -21,8 +22,9 @@ import java.util.UUID;
  */
 
 @Named
+@Singleton
 @Transactional
-public class UserDAO extends AbstractDAO< User, Long >/*implements BaseDAO< User, UserDTO >*/
+public class UserService extends AbstractService< User, Long >/*implements BaseDAO< User, UserDTO >*/
 {
 
 
@@ -31,7 +33,7 @@ public class UserDAO extends AbstractDAO< User, Long >/*implements BaseDAO< User
 	ObjectUtils< User, UserDTO > userUtils;
 
 	@Autowired
-	public UserDAO( UserRepository userRepository, TokenRepository tokenRepository )
+	public UserService( UserRepository userRepository, TokenRepository tokenRepository )
 	{
 		super( userRepository );
 		this.userRepository = userRepository;

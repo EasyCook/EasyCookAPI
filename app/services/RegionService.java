@@ -1,24 +1,25 @@
-package daos;
+package services;
 
 import models.recipes.Region;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 import repositories.RegionRepository;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 /**
  * Created by eduardo on 18/03/15.
  */
 @Named
+@Singleton
 @Transactional
-public class RegionDAO extends AbstractDAO <Region,Long>
+public class RegionService extends AbstractService<Region,Long>
 {
 	RegionRepository regionRepository;
 
 	@Autowired
-	public RegionDAO( RegionRepository regionRepository )
+	public RegionService( RegionRepository regionRepository )
 	{
 		super( regionRepository );
 		this.regionRepository = regionRepository;
