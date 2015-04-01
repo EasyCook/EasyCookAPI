@@ -1,10 +1,10 @@
 package models.recipes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import models.AbstractEntity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,8 +14,41 @@ import java.util.List;
 @Entity
 public class Ingredient extends AbstractEntity
 {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ingredient")
-    List<RecipeIngredient> recipes;
+    String name;
+    String description;
 
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "ingredient_id")
+    @JsonIgnore
+    List<RecipeIngredient> recipes = new ArrayList<>();
 
+    public String getName ()
+    {
+        return name;
+    }
+
+    public void setName (String name)
+    {
+        this.name = name;
+    }
+
+    public String getDescription ()
+    {
+        return description;
+    }
+
+    public void setDescription (String description)
+    {
+        this.description = description;
+    }
+
+    public List<RecipeIngredient> getRecipes ()
+    {
+        return recipes;
+    }
+
+    public void setRecipes (List<RecipeIngredient> recipes)
+    {
+        this.recipes = recipes;
+    }
 }

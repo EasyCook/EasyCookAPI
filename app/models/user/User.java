@@ -37,8 +37,12 @@ public class User extends AbstractEntity
     private String password;
 
 	@JsonIgnore
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<Recipe> recipes;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	List<Image> images;
 
     /*public User ()
     {
@@ -110,6 +114,23 @@ public class User extends AbstractEntity
         this.lastName = lastName;
     }
 
+	public List< Recipe > getRecipes()
+	{
+		return recipes;
+	}
 
+	public void setRecipes( List< Recipe > recipes )
+	{
+		this.recipes = recipes;
+	}
 
+	public List< Image > getImages()
+	{
+		return images;
+	}
+
+	public void setImages( List< Image > images )
+	{
+		this.images = images;
+	}
 }

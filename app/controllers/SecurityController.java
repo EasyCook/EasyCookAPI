@@ -3,7 +3,7 @@ package controllers;
 
 import Constants.StatusCode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import daos.UserDAO;
+import services.UserService;
 import models.security.Token;
 import models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,33 +23,39 @@ import javax.inject.Singleton;
 @Singleton
 public class SecurityController extends Controller /* extends Action.Simple */ {
 
-    public UserDAO userDAO;
+	public UserService userDAO;
 
 
-    @Autowired
-    public SecurityController(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
+	@Autowired
+	public SecurityController( UserService userDAO )
+	{
+		this.userDAO = userDAO;
+	}
 
 
-    @Transactional
-    public Result signUp() {
-        Form<Login> form = Form.form(Login.class).bindFromRequest();
-        if (form.hasErrors()) {
-            return badRequest(form.errorsAsJson());
-        } else {
-            Login login = form.get();
+	@Transactional
+	public Result signUp()
+	{
+		Form< Login > form = Form.form( Login.class ).bindFromRequest();
+		if( form.hasErrors() )
+		{
+			return badRequest( form.errorsAsJson() );
+		}
+		else
+		{
+			Login login = form.get();
 
 
-            User user = userDAO.finByEmail(login.email);
+			User user = userDAO.finByEmail( login.email );
 
-            if (user != null) {
-                return status(StatusCode.USER_EXISTS, "User already exists");
-            }
+			if( user != null )
+			{
+				return status( StatusCode.USER_EXISTS, "User already exists" );
+			}
 
-            user = new User();
-            user.setEmail(login.getEmail());
-            user.setPassword(login.getPassword());
+			user = new User();
+			user.setEmail( login.getEmail() );
+			user.setPassword( login.getPassword());
             user = userDAO.save(user);
             return ok();
 

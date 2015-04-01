@@ -1,7 +1,7 @@
 package controllers;
 
-import daos.NotFoundException;
-import daos.UserDAO;
+import services.NotFoundException;
+import services.UserService;
 import dtos.UserDTO;
 import models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +25,11 @@ public class UserController extends Controller
 {
 
 
-	UserDAO userDAO;
+	UserService userDAO;
 
 
 	@Autowired
-	public UserController( UserDAO userDAO )
+	public UserController( UserService userDAO )
 	{
 		this.userDAO = userDAO;
 	}

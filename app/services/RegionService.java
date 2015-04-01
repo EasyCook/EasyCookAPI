@@ -6,11 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import repositories.RegionRepository;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 /**
  * Created by eduardo on 18/03/15.
  */
 @Named
+@Singleton
 @Transactional
 public class RegionService extends AbstractService<Region,Long>
 {

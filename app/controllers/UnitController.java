@@ -1,8 +1,8 @@
 package controllers;
 
-import daos.AbstractDAO;
-import daos.UnitDAO;
+import services.UnitService;
 import models.recipes.Unit;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -14,9 +14,10 @@ import javax.inject.Singleton;
 @Singleton
 public class UnitController extends BaseCrudController<Unit>
 {
-	UnitDAO unitDAO;
+	UnitService unitDAO;
 
-	public UnitController( UnitDAO unitDAO )
+	@Autowired
+	public UnitController( UnitService unitDAO )
 	{
 		super( unitDAO, Unit.class );
 		this.unitDAO = unitDAO;

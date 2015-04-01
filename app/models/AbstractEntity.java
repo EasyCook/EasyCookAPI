@@ -12,7 +12,6 @@ import java.util.Date;
 @MappedSuperclass
 public class AbstractEntity {
     @Id
-    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
@@ -72,9 +71,9 @@ public class AbstractEntity {
         return id == null ? 0 : id.hashCode();
     }
 
-    @Override
+   /* @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
+    }*/
 
 }

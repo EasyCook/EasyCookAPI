@@ -1,6 +1,6 @@
 package dtos;
 
-import models.recipes.RecipeIngredient;
+import models.recipes.Ingredient;
 import models.recipes.RecipeStep;
 import models.recipes.Unit;
 import models.user.User;
@@ -41,18 +41,35 @@ public class RecipeDTO
 	 * }
 	 */
 
-	Long                     id;
-	String                   title;
-	String                   description;
-	List< RecipeIngredient > ingredients;
-	Integer                  difficulty;
-	List< RecipeStep >       steps;
-	String                   portion;
-	String                   thumbnail;
-	Integer                  calories;
-	Long                     cookingTime;
-	Unit                     timeUnit;
-	User                     user;
+	Long               id;
+	String             title;
+	String             description;
+	Integer            difficulty;
+	String             portion;
+	String             thumbnail;
+	Integer            calories;
+	Long               cookingTime;
+	Unit               timeUnit;
+	Unit               ingredientUnit;
+	User               user;
+	List< RecipeStep > steps;
+	List< Ingredient > ingredients;
+
+
+	public void setIngredients( List< Ingredient > ingredients )
+	{
+		this.ingredients = ingredients;
+	}
+
+	public Unit getIngredientUnit()
+	{
+		return ingredientUnit;
+	}
+
+	public void setIngredientUnit( Unit ingredientUnit )
+	{
+		this.ingredientUnit = ingredientUnit;
+	}
 
 	public Long getId()
 	{
@@ -82,16 +99,6 @@ public class RecipeDTO
 	public void setDescription( String description )
 	{
 		this.description = description;
-	}
-
-	public List< RecipeIngredient > getIngredients()
-	{
-		return ingredients;
-	}
-
-	public void setIngredients( List< RecipeIngredient > ingredients )
-	{
-		this.ingredients = ingredients;
 	}
 
 	public Integer getDifficulty()
@@ -172,5 +179,10 @@ public class RecipeDTO
 	public void setUser( User user )
 	{
 		this.user = user;
+	}
+
+	public List< Ingredient > getIngredients()
+	{
+		return ingredients;
 	}
 }

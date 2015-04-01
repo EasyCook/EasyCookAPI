@@ -1,6 +1,5 @@
 package services;
 
-import models.AbstractEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -8,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.Set;
  */
 @Named
 @Transactional
-public abstract class AbstractService < T extends AbstractEntity, I extends Serializable >
+public abstract class AbstractService < T, I extends Serializable >
 {
 	JpaRepository< T, I > repo;
 
@@ -26,6 +26,21 @@ public abstract class AbstractService < T extends AbstractEntity, I extends Seri
 	public AbstractService( JpaRepository< T, I > repo )
 	{
 		this.repo = repo;
+	}
+
+	/**
+	 * Creates a new set of elements.
+	 *
+	 * @param entity The information of the created element.
+	 *
+	 * @return The created element.
+	 */
+
+	@Transactional
+
+	public Iterable< T > save( Iterable< T > entity )
+	{
+		return repo.save( entity );
 	}
 
 	/**
@@ -100,7 +115,7 @@ public abstract class AbstractService < T extends AbstractEntity, I extends Seri
 	 *
 	 * @return A list of persons.
 	 */
-	@Transactional( readOnly = true )
+	@Transactional(readOnly = true)
 	public List< T > findAll()
 	{
 		return repo.findAll();
@@ -113,30 +128,34 @@ public abstract class AbstractService < T extends AbstractEntity, I extends Seri
 	 *
 	 * @return The found person. If no person is found, this method returns null.
 	 */
-	@Transactional( readOnly = true )
+	@Transactional(readOnly = true)
 	public T findById( I id )
 	{
 		return repo.getOne( id );
 	}
 
-
-
-	public  String[] getNullPropertyNames (Object source) {
-		final BeanWrapper src = new BeanWrapperImpl(source);
+	public String[] getNullPropertyNames( Object source )
+	{
+		final BeanWrapper src = new BeanWrapperImpl( source );
 		java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
 
-		Set<String> emptyNames = new HashSet<String>();
-		for(java.beans.PropertyDescriptor pd : pds) {
-			Object srcValue = src.getPropertyValue(pd.getName());
-			if (srcValue == null) emptyNames.add(pd.getName());
+		Set< String > emptyNames = new HashSet< String >();
+		for( java.beans.PropertyDescriptor pd : pds )
+		{
+			Object srcValue = src.getPropertyValue( pd.getName() );
+			if( srcValue == null )
+			{
+				emptyNames.add( pd.getName() );
+			}
 		}
 		String[] result = new String[emptyNames.size()];
-		return emptyNames.toArray(result);
+		return emptyNames.toArray( result );
 	}
 
 	// then use Spring BeanUtils to copy and ignore null
-	public  void myCopyProperties(Object src, Object target) {
-		BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
+	public void myCopyProperties( Object src, Object target )
+	{
+		BeanUtils.copyProperties( src, target, getNullPropertyNames( src ) );
 	}
 
 }

@@ -3,7 +3,7 @@ package security;
 
 import Constants.StatusCode;
 import Constants.UserLoginStatus;
-import daos.UserDAO;
+import services.UserService;
 import models.security.Token;
 import models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,31 +20,31 @@ import javax.inject.Named;
 @Named
 public class TokenAuthAction extends Action.Simple
 {
-    public final static String AUTH_TOKEN_HEADER = "X-AUTH-TOKEN";
-    public static final String AUTH_TOKEN = "authToken";
+	public final static String AUTH_TOKEN_HEADER = "X-AUTH-TOKEN";
+	public static final String AUTH_TOKEN        = "authToken";
 
 
-    public TokenRepository tokenRepository;
-	public UserDAO userDAO;
+	public TokenRepository tokenRepository;
+	public UserService     userDAO;
 
-    @Autowired
-    public TokenAuthAction (UserDAO userDAO,TokenRepository tokenRepository)
-    {
-        this.tokenRepository = tokenRepository;
-	    this.userDAO = userDAO;
-    }
+	@Autowired
+	public TokenAuthAction( UserService userDAO, TokenRepository tokenRepository )
+	{
+		this.tokenRepository = tokenRepository;
+		this.userDAO = userDAO;
+	}
 
-    public static User getUser ()
-    {
-        return (User) Http.Context.current().args.get("user");
-    }
+	public static User getUser()
+	{
+		return ( User ) Http.Context.current().args.get( "user" );
+	}
 
-    @Override
-    public Promise<Result> call (Context ctx) throws Throwable
-    {
-        User user = null;
-        Token token = null;
-        String[] authTokenHeaderValues = ctx.request().headers().get(AUTH_TOKEN_HEADER);
+	@Override
+	public Promise< Result > call( Context ctx ) throws Throwable
+	{
+		User user = null;
+		Token token = null;
+		String[] authTokenHeaderValues = ctx.request().headers().get(AUTH_TOKEN_HEADER);
 
         if ((authTokenHeaderValues != null) && (authTokenHeaderValues.length == 1) && (authTokenHeaderValues[0] != null))
         {

@@ -1,7 +1,6 @@
 package controllers;
 
-import daos.AbstractDAO;
-import daos.IngredientDAO;
+import services.IngredientService;
 import models.recipes.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,10 +14,10 @@ import javax.inject.Singleton;
 @Singleton
 public class IngredientController extends BaseCrudController<Ingredient>
 {
-	IngredientDAO ingredientDAO;
+	IngredientService ingredientDAO;
 
 	@Autowired
-	public IngredientController(IngredientDAO ingredientDAO)
+	public IngredientController( IngredientService ingredientDAO )
 	{
 		super( ingredientDAO, Ingredient.class );
 		this.ingredientDAO = ingredientDAO;

@@ -1,16 +1,19 @@
 package controllers;
 
-import daos.RecipeDAO;
 import dtos.RecipeDTO;
-import models.recipes.Category;
-import models.recipes.Recipe;
+import models.recipes.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import play.data.Form;
 import play.mvc.Result;
+import services.RecipeService;
+import services.UnitService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static play.libs.Json.toJson;
 
@@ -20,44 +23,88 @@ import static play.libs.Json.toJson;
  */
 @Named
 @Singleton
-public class RecipeController extends BaseCrudController<Recipe>
+public class RecipeController extends BaseCrudController< Recipe >
 {
-	RecipeDAO recipeDAO;
+	RecipeService recipeService;
+	Form< RecipeDTO > recipeDTOForm = Form.form( RecipeDTO.class );
 
 	@Autowired
-	public RecipeController( RecipeDAO recipeDAO )
+	public RecipeController( RecipeService recipeService )
 	{
-		super(recipeDAO,Recipe.class);
-		this.recipeDAO = recipeDAO;
+		super( recipeService, Recipe.class );
+		this.recipeService = recipeService;
 	}
 
-	public Result getRecipe(Long id)
+	@Override
+	public Result create()
 	{
-		Recipe recipe = recipeDAO.findById( id );
+		recipeDTOForm = recipeDTOForm.bindFromRequest();
 
-		if(recipe==null)
+		if( recipeDTOForm.hasErrors() )
+		{
+			return badRequest( recipeDTOForm.errorsAsJson() );
+		}
+
+		RecipeDTO recipeDTO = recipeDTOForm.get();
+
+		Optional< Long > recipeId = recipeService.createRecipe( recipeDTO );
+
+		if( recipeId.isPresent() )
+		{
+			return ok( toJson( recipeId.get() ) );
+		}
+
+		return badRequest();
+
+	}
+
+	public Result getRecipe( Long id )
+	{
+		Recipe recipe = recipeService.findById( id );
+
+		if( recipe == null )
+		{
 			return notFound();
+		}
 
-		RecipeDTO recipeDTO = new RecipeDTO();
-		recipeDTO.setCalories( recipe.getCalories() );
-		recipeDTO.setCookingTime( recipe.getTime() );
-		recipeDTO.setDescription( recipe.getDescription() );
-		recipeDTO.setDifficulty( recipe.getDifficulty() );
-		recipeDTO.setId( recipe.getId() );
-		recipeDTO.setIngredients( recipe.getIngredients() );
-		recipeDTO.setTimeUnit( recipe.getTimeUnit() );
-		recipeDTO.setPortion( recipe.getPortion() );
-		recipeDTO.setSteps( recipe.getSteps() );
-		recipeDTO.setThumbnail( recipe.getThumbnail() );
-		recipeDTO.setTitle( recipe.getTitle() );
-		recipeDTO.setUser( recipe.getUser() );
+        RecipeDTO recipeDTO = recipeService.getRecipeDTO(recipe);
 
-		return ok(toJson( recipeDTO ));
+		return ok( toJson( recipeDTO ) );
 	}
 
-	public Result getRecipeCategory(Long id)
+    @Override
+    public Result getAll()
+    {
+        List<Recipe> recipes = recipeService.findAll();
+        List<RecipeDTO> recipeDTOs = recipeService.getRecipeDTO(recipes);
+        return ok(toJson(recipeDTOs));
+
+    }
+
+    public Result getRecipeCategory( Long id )
 	{
-		List<Category > categories = recipeDAO.getCategories( id );
-		return ok(toJson(categories));
+		List< Category > categories = recipeService.getCategories( id );
+		return ok( toJson( categories ) );
 	}
+
+	public Result addCategory( Long recipeId, Long categoryId )
+	{
+		if( recipeService.addCategory( recipeId, categoryId ) )
+		{
+			return ok();
+		}
+		return badRequest();
+	}
+
+
+	public Result addIngredient( Long recipeId, Long ingredientId )
+	{
+		if( recipeService.addIngredient( recipeId, ingredientId ) )
+		{
+			return ok();
+		}
+		return badRequest();
+	}
+
+
 }

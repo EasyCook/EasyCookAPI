@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate3.HibernateExceptionTranslator;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
@@ -40,7 +41,7 @@ public class Global extends GlobalSettings
         // can be called multiple times. The reason for doing during startup is so that the Play configuration is
         // entirely available to this application context.
         ctx.register(SpringDataJpaConfiguration.class);
-        ctx.scan("controllers", "models", "repositories", "security", "daos");
+        ctx.scan("controllers", "models", "repositories", "security", "services" );
         ctx.refresh();
         // This will construct the beans and call any construction lifecycle methods e.g. @PostConstruct
         ctx.start();
@@ -84,6 +85,7 @@ public class Global extends GlobalSettings
      * This configuration establishes Spring Data concerns including those of JPA.
      */
     @Configuration
+    @EnableTransactionManagement
     @EnableJpaRepositories("repositories")
     public static class SpringDataJpaConfiguration
     {

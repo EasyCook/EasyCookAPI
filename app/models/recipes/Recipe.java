@@ -1,186 +1,197 @@
 package models.recipes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import models.AbstractEntity;
 import models.user.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 /**
  * Created by eduardo on 13/02/15.
  */
-@SuppressWarnings( "serial" )
+@SuppressWarnings("serial")
 @Entity
 public class Recipe extends AbstractEntity
 {
 
-	String title;
+    String title;
+    String description;
+    String portion;
+    String thumbnail;
 
-	String description;
+    Integer calories;
+    Integer difficulty;
 
-	String portion;
+    Long time;
 
-	String thumbnail;
 
-	Integer calories;
+    @OneToOne(cascade = CascadeType.ALL,fetch = EAGER)
+    Region region;
 
-	Integer difficulty;
 
-	@OneToMany( cascade = CascadeType.ALL, mappedBy = "recipe" ) List< RecipeIngredient > ingredients;
+    @OneToOne( cascade = CascadeType.ALL,fetch = EAGER)
+    Unit timeUnit;
 
-	@OneToOne Level level;
 
-	@OneToOne Region region;
+    @ManyToOne( cascade = CascadeType.ALL,fetch = EAGER)
+    User user;
 
-	@OneToMany( fetch = LAZY , cascade = CascadeType.ALL, mappedBy = "recipe") List< RecipeCategory > categories;
+	/*@OneToOne Unit ingredientUnit;*/
+    @JsonIgnore
+    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL, mappedBy = "recipe", orphanRemoval = true)
+    List<RecipeStep> steps = new ArrayList<>();
 
-	@ManyToOne User user;
+    @JsonIgnore
+    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL, mappedBy = "recipe", orphanRemoval = true)
+    List<RecipeCategory> categories = new ArrayList<>();
 
-	Long time;
+    @JsonIgnore
+    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL, mappedBy = "recipe", orphanRemoval = true)
+    List<RecipeIngredient> ingredients = new ArrayList<>();
 
-	@OneToOne Unit timeUnit;
+    public List<RecipeCategory> getCategories ()
+    {
+        return categories;
+    }
 
-	@OneToMany( fetch = LAZY ) List< RecipeStep > steps;
+    public void setCategories (List<RecipeCategory> categories)
+    {
+        this.categories = categories;
+    }
 
-	public String getTitle()
-	{
-		return title;
+	/*public Unit getIngredientUnit()
+    {
+		return ingredientUnit;
 	}
 
-	public void setTitle( String title )
+	public void setIngredientUnit( Unit ingredientUnit )
 	{
-		this.title = title;
-	}
+		this.ingredientUnit = ingredientUnit;
+	}*/
 
-	public String getDescription()
-	{
-		return description;
-	}
+    public String getTitle ()
+    {
+        return title;
+    }
 
-	public void setDescription( String description )
-	{
-		this.description = description;
-	}
+    public void setTitle (String title)
+    {
+        this.title = title;
+    }
 
-	public String getPortion()
-	{
-		return portion;
-	}
+    public String getDescription ()
+    {
+        return description;
+    }
 
-	public void setPortion( String portion )
-	{
-		this.portion = portion;
-	}
+    public void setDescription (String description)
+    {
+        this.description = description;
+    }
 
-	public String getThumbnail()
-	{
-		return thumbnail;
-	}
+    public String getPortion ()
+    {
+        return portion;
+    }
 
-	public void setThumbnail( String thumbnail )
-	{
-		this.thumbnail = thumbnail;
-	}
+    public void setPortion (String portion)
+    {
+        this.portion = portion;
+    }
 
-	public Integer getCalories()
-	{
-		return calories;
-	}
+    public String getThumbnail ()
+    {
+        return thumbnail;
+    }
 
-	public void setCalories( Integer calories )
-	{
-		this.calories = calories;
-	}
+    public void setThumbnail (String thumbnail)
+    {
+        this.thumbnail = thumbnail;
+    }
 
-	public Integer getDifficulty()
-	{
-		return difficulty;
-	}
+    public Integer getCalories ()
+    {
+        return calories;
+    }
 
-	public void setDifficulty( Integer difficulty )
-	{
-		this.difficulty = difficulty;
-	}
+    public void setCalories (Integer calories)
+    {
+        this.calories = calories;
+    }
 
-	public List< RecipeIngredient > getIngredients()
-	{
-		return ingredients;
-	}
+    public Integer getDifficulty ()
+    {
+        return difficulty;
+    }
 
-	public void setIngredients( List< RecipeIngredient > ingredients )
-	{
-		this.ingredients = ingredients;
-	}
+    public void setDifficulty (Integer difficulty)
+    {
+        this.difficulty = difficulty;
+    }
 
-	public Level getLevel()
-	{
-		return level;
-	}
+    public List<RecipeIngredient> getIngredients ()
+    {
+        return ingredients;
+    }
 
-	public void setLevel( Level level )
-	{
-		this.level = level;
-	}
+    public void setIngredients (List<RecipeIngredient> ingredients)
+    {
+        this.ingredients = ingredients;
+    }
 
-	public Region getRegion()
-	{
-		return region;
-	}
 
-	public void setRegion( Region region )
-	{
-		this.region = region;
-	}
+    public Region getRegion ()
+    {
+        return region;
+    }
 
-	public List< RecipeCategory > getCategory()
-	{
-		return categories;
-	}
+    public void setRegion (Region region)
+    {
+        this.region = region;
+    }
 
-	public void setCategory( List< RecipeCategory > category )
-	{
-		this.categories = category;
-	}
+    public User getUser ()
+    {
+        return user;
+    }
 
-	public User getUser()
-	{
-		return user;
-	}
+    public void setUser (User user)
+    {
+        this.user = user;
+    }
 
-	public void setUser( User user )
-	{
-		this.user = user;
-	}
+    public Long getTime ()
+    {
+        return time;
+    }
 
-	public Long getTime()
-	{
-		return time;
-	}
+    public void setTime (Long time)
+    {
+        this.time = time;
+    }
 
-	public void setTime( Long time )
-	{
-		this.time = time;
-	}
+    public Unit getTimeUnit ()
+    {
+        return timeUnit;
+    }
 
-	public Unit getTimeUnit()
-	{
-		return timeUnit;
-	}
+    public void setTimeUnit (Unit timeUnit)
+    {
+        this.timeUnit = timeUnit;
+    }
 
-	public void setTimeUnit( Unit timeUnit )
-	{
-		this.timeUnit = timeUnit;
-	}
+    public List<RecipeStep> getSteps ()
+    {
+        return steps;
+    }
 
-	public List< RecipeStep > getSteps()
-	{
-		return steps;
-	}
-
-	public void setSteps( List< RecipeStep > steps )
-	{
-		this.steps = steps;
-	}
+    public void setSteps (List<RecipeStep> steps)
+    {
+        this.steps = steps;
+    }
 }

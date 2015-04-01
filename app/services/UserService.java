@@ -14,6 +14,7 @@ import repositories.UserRepository;
 import utils.ObjectUtils;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
@@ -21,6 +22,7 @@ import java.util.UUID;
  */
 
 @Named
+@Singleton
 @Transactional
 public class UserService extends AbstractService< User, Long >/*implements BaseDAO< User, UserDTO >*/
 {

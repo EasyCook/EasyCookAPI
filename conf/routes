@@ -5,25 +5,61 @@
 # Home page
 
 # Map static resources from the /public folder to the /assets URL path
-GET            /assets/*file                      controllers.Assets.at(path="/public", file)
+GET            /assets/*file                                      controllers.Assets.at(path="/public", file)
 
 #Security
-POST           /signup                            @controllers.SecurityController.signUp()
-POST           /login                             @controllers.SecurityController.login()
-GET            /logout                            @controllers.SecurityController.logout()
+POST           /signup                                            @controllers.SecurityController.signUp()
+POST           /login                                             @controllers.SecurityController.login()
+GET            /logout                                            @controllers.SecurityController.logout()
 
 #User
-GET            /users                             @controllers.UserController.getAllUsers()
-GET            /users/:userId                     @controllers.UserController.getUser(userId: Long)
-PUT            /users/:userId                     @controllers.UserController.updateUser(userId: Long)
-DELETE         /users/:userId                     @controllers.UserController.deleteUser(userId: Long)
+GET            /users                                             @controllers.UserController.getAllUsers()
+GET            /users/:userId                                     @controllers.UserController.getUser(userId: Long)
+PUT            /users/:userId                                     @controllers.UserController.updateUser(userId: Long)
+DELETE         /users/:userId                                     @controllers.UserController.deleteUser(userId: Long)
 
 #Recipe
-GET            /recipes/:recipeId                 @controllers.RecipeController.getRecipe(recipeId: Long)
-GET            /recipes/:recipeId/category        @controllers.RecipeController.getRecipeCategory(recipeId: Long)
+GET            /recipes/:recipeId                                 @controllers.RecipeController.getRecipe(recipeId: Long)
+GET            /recipes/:recipeId/category                        @controllers.RecipeController.getRecipeCategory(recipeId: Long)
+PUT            /recipes/:recipeId/category/:categoryId            @controllers.RecipeController.addCategory(recipeId: Long, categoryId: Long)
+PUT            /recipes/:recipeId/ingredient/:ingredientId        @controllers.RecipeController.addIngredient(recipeId: Long, ingredientId: Long)
+GET            /recipes/:id                                       @controllers.RecipeController.get(id: Long)
+GET            /recipes                                           @controllers.RecipeController.getAll()
+DELETE         /recipes/:id                                       @controllers.RecipeController.delete(id: Long)
+POST           /recipes                                           @controllers.RecipeController.create()
+PUT            /recipes/:id                                       @controllers.RecipeController.update(id: Long)
+
 #Category
-GET            /category/:slug                    @controllers.CategoryController.getCategoryBySlug(slug: String)
+GET            /categories/:slug                                  @controllers.CategoryController.getCategoryBySlug(slug: String)
+GET            /categories/:id                                    @controllers.CategoryController.get(id: Long)
+GET            /categories                                        @controllers.CategoryController.getAll()
+DELETE         /categories/:id                                    @controllers.CategoryController.delete(id: Long)
+POST           /categories                                        @controllers.CategoryController.create()
+POST           /categories/bulk                                   @controllers.CategoryController.createAll()
+PUT            /categories/:id                                    @controllers.CategoryController.update(id: Long)
 
+#Ingredient
+GET            /ingredients/:id                                   @controllers.IngredientController.get(id: Long)
+GET            /ingredients                                       @controllers.IngredientController.getAll()
+DELETE         /ingredients/:id                                   @controllers.IngredientController.delete(id: Long)
+POST           /ingredients                                       @controllers.IngredientController.create()
+POST           /ingredients/bulk                                  @controllers.IngredientController.createAll()
+PUT            /ingredients/:id                                   @controllers.IngredientController.update(id: Long)
 
-OPTIONS        /*path                             @controllers.Application.checkPreFlight(path: String)
+#Region
+GET            /regions/:id                                       @controllers.RegionController.get(id: Long)
+GET            /regions                                           @controllers.RegionController.getAll()
+DELETE         /regions/:id                                       @controllers.RegionController.delete(id: Long)
+POST           /regions                                           @controllers.RegionController.create()
+PUT            /regions/:id                                       @controllers.RegionController.update(id: Long)
+
+#Unit
+GET            /units/:id                                         @controllers.UnitController.get(id: Long)
+GET            /units                                             @controllers.UnitController.getAll()
+DELETE         /units/:id                                         @controllers.UnitController.delete(id: Long)
+POST           /units                                             @controllers.UnitController.create()
+PUT            /units/:id                                         @controllers.UnitController.update(id: Long)
+POST           /units/bulk                                        @controllers.UnitController.createAll()
+
+OPTIONS        /*path                                             @controllers.Application.checkPreFlight(path: String)
 
