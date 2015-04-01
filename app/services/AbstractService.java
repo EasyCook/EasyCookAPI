@@ -1,4 +1,4 @@
-package daos;
+package services;
 
 import models.AbstractEntity;
 import org.springframework.beans.BeanUtils;
@@ -18,22 +18,22 @@ import java.util.Set;
  */
 @Named
 @Transactional
-public abstract class AbstractDAO < T extends AbstractEntity, I extends Serializable >
+public abstract class AbstractService < T extends AbstractEntity, I extends Serializable >
 {
 	JpaRepository< T, I > repo;
 
 
-	public AbstractDAO( JpaRepository< T, I > repo )
+	public AbstractService( JpaRepository< T, I > repo )
 	{
 		this.repo = repo;
 	}
 
 	/**
-	 * Creates a new person.
+	 * Creates a new element.
 	 *
-	 * @param entity The information of the created person.
+	 * @param entity The information of the created element.
 	 *
-	 * @return The created person.
+	 * @return The created element.
 	 */
 
 	@Transactional
@@ -44,13 +44,13 @@ public abstract class AbstractDAO < T extends AbstractEntity, I extends Serializ
 	}
 
 	/**
-	 * Updates the information of a person.
+	 * Updates the information of a element.
 	 *
-	 * @param updated The information of the updated person.
+	 * @param updated The information of the updated element.
 	 *
-	 * @return The updated person.
+	 * @return The updated element.
 	 *
-	 * @throws NotFoundException if no person is found with given id.
+	 * @throws NotFoundException if no element is found with given id.
 	 */
 	@Transactional( rollbackFor = NotFoundException.class )
 	public T update( I id, Object updated ) throws NotFoundException

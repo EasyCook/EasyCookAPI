@@ -1,4 +1,4 @@
-package daos;
+package services;
 
 /**
  * Created by eduardo on 12/03/15.
