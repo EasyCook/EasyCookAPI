@@ -32,7 +32,7 @@ public class Application extends Controller
 
     public Result index ()
     {
-        return ok();
+        return ok(views.html.index.render("TEST"));
     }
 
 

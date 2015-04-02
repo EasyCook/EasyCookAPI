@@ -63,3 +63,5 @@ POST           /units/bulk                                        @controllers.U
 
 OPTIONS        /*path                                             @controllers.Application.checkPreFlight(path: String)
 
+GET            /                                             @controllers.Application.index()
+
