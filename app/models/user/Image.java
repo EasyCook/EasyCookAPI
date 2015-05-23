@@ -1,6 +1,6 @@
 package models.user;
 
-import models.AbstractEntity;
+import models.base.AbstractEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;

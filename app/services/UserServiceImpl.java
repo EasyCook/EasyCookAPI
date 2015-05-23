@@ -2,7 +2,6 @@ package services;
 
 
 import Constants.UserLoginStatus;
-import dtos.UserDTO;
 import models.security.Token;
 import models.user.User;
 import org.joda.time.DateTime;
@@ -11,7 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import play.mvc.Http;
 import repositories.TokenRepository;
 import repositories.UserRepository;
-import utils.ObjectUtils;
+import services.base.AbstractService;
+import services.interfaces.UserService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -24,41 +24,35 @@ import java.util.UUID;
 @Named
 @Singleton
 @Transactional
-public class UserService extends AbstractService< User, Long >/*implements BaseDAO< User, UserDTO >*/
-{
+public class UserServiceImpl extends AbstractService< User, Long > implements UserService {
 
 
-	UserRepository               userRepository;
-	TokenRepository              tokenRepository;
-	ObjectUtils< User, UserDTO > userUtils;
+	UserRepository  userRepository;
+	TokenRepository tokenRepository;
+
 
 	@Autowired
-	public UserService( UserRepository userRepository, TokenRepository tokenRepository )
-	{
+	public UserServiceImpl( UserRepository userRepository, TokenRepository tokenRepository ) {
 		super( userRepository );
 		this.userRepository = userRepository;
 		this.tokenRepository = tokenRepository;
-		this.userUtils = new ObjectUtils<>( User.class, UserDTO.class );
 	}
 
 
 	//region Custom methods
 	@Transactional( readOnly = true )
-	public User findByEmailAndPassword( String email, String password )
-	{
+	public User findByEmailAndPassword( String email, String password ) {
 		return userRepository.findUserByEmailAndPassword( email, User.getMD5( password ) );
 	}
 
 	@Transactional( readOnly = true )
-	public Long count()
-	{
+	public Long count() {
 		return userRepository.count();
 	}
 
 
 	@Transactional
-	public User login( User user )
-	{
+	public User login( User user ) {
 
 		String authToken = UUID.randomUUID().toString();
 
@@ -66,8 +60,7 @@ public class UserService extends AbstractService< User, Long >/*implements BaseD
 
 		//TODO add logic for expired token
 
-		if( token == null )
-		{
+		if ( token == null ) {
 			token = new Token();
 		}
 		token.setStatus( UserLoginStatus.NEW );
@@ -85,8 +78,7 @@ public class UserService extends AbstractService< User, Long >/*implements BaseD
 
 	}
 
-	public Token checkIfExpired( Token token )
-	{
+	public Token checkIfExpired( Token token ) {
 		Long loggedIn = token.lastModifiedDate.getTime();
 
 		Long expired = token.expirationDate.getTime();
@@ -96,13 +88,10 @@ public class UserService extends AbstractService< User, Long >/*implements BaseD
 		Long allowed = expired - loggedIn;
 		Long current = now - loggedIn;
 
-		if( current < allowed )
-		{
+		if ( current < allowed ) {
 			token.setStatus( UserLoginStatus.ACTIVE );
 
-		}
-		else
-		{
+		} else {
 			token.setStatus( UserLoginStatus.EXPIRED );
 		}
 
@@ -111,8 +100,7 @@ public class UserService extends AbstractService< User, Long >/*implements BaseD
 	}
 
 	@Transactional
-	public void logout( Long userId )
-	{
+	public void logout( Long userId ) {
 
 		Token token = tokenRepository.findTokenByUserId( userId );
 		token.setAuthToken( null );
@@ -121,18 +109,15 @@ public class UserService extends AbstractService< User, Long >/*implements BaseD
 		tokenRepository.save( token );
 	}
 
-	public User getLoggedInUser()
-	{
+	public User getLoggedInUser() {
 		return ( User ) Http.Context.current().args.get( "user" );
 	}
 
-	public User finByEmail( String email )
-	{
+	public User finByEmail( String email ) {
 		return userRepository.findUserByEmail( email );
 	}
 
-	public Token getUserToken( User user )
-	{
+	public Token getUserToken( User user ) {
 		return tokenRepository.findTokenByUserId( user.getId() );
 	}
 	//endregion

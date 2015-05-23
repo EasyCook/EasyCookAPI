@@ -1,8 +1,9 @@
 package controllers;
 
-import services.RegionService;
+import controllers.base.BaseCrudController;
 import models.recipes.Region;
 import org.springframework.beans.factory.annotation.Autowired;
+import services.interfaces.RegionService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -14,12 +15,12 @@ import javax.inject.Singleton;
 @Singleton
 public class RegionController extends BaseCrudController<Region>
 {
-	RegionService regionDAO;
+	RegionService regionService;
 
 	@Autowired
-	public RegionController( RegionService regionDAO )
+	public RegionController( RegionService regionService )
 	{
-		super( regionDAO, Region.class );
-		this.regionDAO = regionDAO;
+		super( regionService );
+		this.regionService = regionService;
 	}
 }

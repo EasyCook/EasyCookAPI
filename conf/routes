@@ -13,10 +13,10 @@ POST           /login                                             @controllers.S
 GET            /logout                                            @controllers.SecurityController.logout()
 
 #User
-GET            /users                                             @controllers.UserController.getAllUsers()
-GET            /users/:userId                                     @controllers.UserController.getUser(userId: Long)
-PUT            /users/:userId                                     @controllers.UserController.updateUser(userId: Long)
-DELETE         /users/:userId                                     @controllers.UserController.deleteUser(userId: Long)
+GET            /users                                             @controllers.UserController.getAll()
+GET            /users/:userId                                     @controllers.UserController.get(userId: Long)
+PUT            /users/:userId                                     @controllers.UserController.update(userId: Long)
+DELETE         /users/:userId                                     @controllers.UserController.delete(userId: Long)
 
 #Recipe
 GET            /recipes/:recipeId                                 @controllers.RecipeController.getRecipe(recipeId: Long)
@@ -63,5 +63,5 @@ POST           /units/bulk                                        @controllers.U
 
 OPTIONS        /*path                                             @controllers.Application.checkPreFlight(path: String)
 
-GET            /                                             @controllers.Application.index()
+GET            /                                                  @controllers.Application.index()
 

@@ -1,9 +1,10 @@
 package controllers;
 
-import services.CategoryService;
+import controllers.base.BaseCrudController;
 import models.recipes.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import play.mvc.Result;
+import services.interfaces.CategoryService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -18,19 +19,19 @@ import static play.libs.Json.toJson;
 @Singleton
 public class CategoryController extends BaseCrudController<Category>
 {
-	CategoryService categoryDAO;
+	CategoryService categoryService;
 
 	@Autowired
-	public CategoryController( CategoryService categoryDAO )
+	public CategoryController( CategoryService categoryService)
 	{
-		super( categoryDAO, Category.class );
-		this.categoryDAO = categoryDAO;
+		super(categoryService);
+		this.categoryService = categoryService;
 	}
 
 	public Result getCategoryBySlug( String slug )
 	{
 		Category category;
-		category = categoryDAO.findBySlug( slug );
+		category = categoryService.findBySlug( slug );
 		return ok( toJson( category ) );
 	}
 

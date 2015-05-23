@@ -3,6 +3,8 @@ package services;
 import models.recipes.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import repositories.IngredientRepository;
+import services.base.AbstractService;
+import services.interfaces.IngredientService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -12,12 +14,12 @@ import javax.inject.Singleton;
  */
 @Named
 @Singleton
-public class IngredientService extends AbstractService<Ingredient,Long>
+public class IngredientServiceImpl extends AbstractService<Ingredient,Long> implements IngredientService
 {
 	IngredientRepository ingredientRepository;
 
 	@Autowired
-	public IngredientService( IngredientRepository ingredientRepository )
+	public IngredientServiceImpl (IngredientRepository ingredientRepository)
 	{
 		super( ingredientRepository );
 		this.ingredientRepository = ingredientRepository;

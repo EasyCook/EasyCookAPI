@@ -1,7 +1,7 @@
 package models.recipes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import models.AbstractEntity;
+import models.base.AbstractEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 import repositories.*;
+import services.base.AbstractService;
+import services.interfaces.RecipeService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 @Named
 @Singleton
 @Transactional
-public class RecipeService extends AbstractService<Recipe, Long>
+public class RecipeServiceImpl extends AbstractService<Recipe, Long> implements RecipeService
 {
     RecipeRepository recipeRepository;
     CategoryRepository categoryRepository;
@@ -31,9 +33,9 @@ public class RecipeService extends AbstractService<Recipe, Long>
     UnitRepository unitRepository;
 
     @Autowired
-    public RecipeService (JpaRepository<Recipe, Long> repo, IngredientRepository ingredientRepository, RecipeRepository recipeRepository,
-                          RecipeCategoryRepository recipeCategoryRepository, CategoryRepository categoryRepository,
-                          RecipeIngredientRepository recipeIngredientRepository, RecipeStepRepository recipeStepRepository, UnitRepository unitRepository)
+    public RecipeServiceImpl (JpaRepository<Recipe, Long> repo, IngredientRepository ingredientRepository, RecipeRepository recipeRepository,
+                              RecipeCategoryRepository recipeCategoryRepository, CategoryRepository categoryRepository,
+                              RecipeIngredientRepository recipeIngredientRepository, RecipeStepRepository recipeStepRepository, UnitRepository unitRepository)
     {
         super(repo);
         this.recipeRepository = recipeRepository;

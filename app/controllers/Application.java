@@ -1,6 +1,6 @@
 package controllers;
 
-import services.UserService;
+import services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import play.mvc.*;
 
@@ -11,15 +11,10 @@ public class Application extends Controller
 {
 
 
-	UserService userDAO;
 
 
-	@Autowired
-	public Application( UserService userDAO )
-	{
-		this.userDAO = userDAO;
 
-	}
+
 
 	public Result checkPreFlight( String path )
 	{

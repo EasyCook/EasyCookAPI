@@ -1,8 +1,9 @@
 package controllers;
 
-import services.IngredientService;
+import controllers.base.BaseCrudController;
 import models.recipes.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
+import services.interfaces.IngredientService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -17,9 +18,9 @@ public class IngredientController extends BaseCrudController<Ingredient>
 	IngredientService ingredientDAO;
 
 	@Autowired
-	public IngredientController( IngredientService ingredientDAO )
+	public IngredientController( IngredientService ingredienService )
 	{
-		super( ingredientDAO, Ingredient.class );
-		this.ingredientDAO = ingredientDAO;
+		super( ingredienService);
+		this.ingredientDAO = ingredienService;
 	}
 }

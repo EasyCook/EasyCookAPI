@@ -3,7 +3,7 @@ package controllers;
 
 import Constants.StatusCode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import services.UserService;
+import services.UserServiceImpl;
 import models.security.Token;
 import models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import security.TokenAuth;
 import security.TokenAuthAction;
+import services.interfaces.UserService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -23,13 +24,13 @@ import javax.inject.Singleton;
 @Singleton
 public class SecurityController extends Controller /* extends Action.Simple */ {
 
-	public UserService userDAO;
+	public UserService userService;
 
 
 	@Autowired
-	public SecurityController( UserService userDAO )
+	public SecurityController( UserService userService )
 	{
-		this.userDAO = userDAO;
+		this.userService = userService;
 	}
 
 
@@ -46,7 +47,7 @@ public class SecurityController extends Controller /* extends Action.Simple */ {
 			Login login = form.get();
 
 
-			User user = userDAO.finByEmail( login.email );
+			User user = userService.finByEmail( login.email );
 
 			if( user != null )
 			{
@@ -56,7 +57,7 @@ public class SecurityController extends Controller /* extends Action.Simple */ {
 			user = new User();
 			user.setEmail( login.getEmail() );
 			user.setPassword( login.getPassword());
-            user = userDAO.save(user);
+            user = userService.save(user);
             return ok();
 
         }
@@ -73,7 +74,7 @@ public class SecurityController extends Controller /* extends Action.Simple */ {
 
         Login login = loginForm.get();
 
-        User user = userDAO.findByEmailAndPassword(login.getEmail(), login.getPassword());
+        User user = userService.findByEmailAndPassword(login.getEmail(), login.getPassword());
 
 
         if (user == null) {
@@ -94,14 +95,15 @@ public class SecurityController extends Controller /* extends Action.Simple */ {
     }
 
     private ObjectNode login(User user) {
-        user = userDAO.login(user);
+
+        user = userService.login(user);
 
         //handling expired token
         if (user == null) {
             return null;
         }
 
-        Token token = userDAO.getUserToken(user);
+        Token token = userService.getUserToken(user);
 
         ObjectNode authTokenJson = Json.newObject();
         authTokenJson.put("id", user.getId());
@@ -119,8 +121,8 @@ public class SecurityController extends Controller /* extends Action.Simple */ {
     public Result logout() {
         response().discardCookie(TokenAuthAction.AUTH_TOKEN);
         //User user = TokenAuthAction.getUser();
-        User user = userDAO.getLoggedInUser();
-        userDAO.logout(user.getId());
+        User user = userService.getLoggedInUser();
+        userService.logout(user.getId());
         return ok("logged out");
     }
 

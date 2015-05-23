@@ -3,6 +3,8 @@ package services;
 import models.recipes.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import repositories.CategoryRepository;
+import services.base.AbstractService;
+import services.interfaces.CategoryService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -12,14 +14,14 @@ import javax.inject.Singleton;
  */
 @Named
 @Singleton
-public class CategoryService extends AbstractService<Category,Long>
+public class CategoryServiceImpl extends AbstractService<Category,Long> implements CategoryService
 {
 
 	CategoryRepository                   categoryRepository;
 
 
 	@Autowired
-	public CategoryService( CategoryRepository categoryRepository )
+	public CategoryServiceImpl (CategoryRepository categoryRepository)
 	{
 		super(categoryRepository);
 		this.categoryRepository = categoryRepository;
@@ -27,10 +29,10 @@ public class CategoryService extends AbstractService<Category,Long>
 	}
 
 
-	//region custom methods
-	public Category findBySlug( String slug )
-	{
-		return categoryRepository.findBySlug( slug );
-	}
-	//endregion
+    //region custom methods
+    public Category findBySlug( String slug )
+    {
+        return categoryRepository.findBySlug( slug );
+    }
+    //endregion
 }

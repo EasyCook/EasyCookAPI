@@ -3,6 +3,8 @@ package services;
 import models.recipes.Unit;
 import org.springframework.beans.factory.annotation.Autowired;
 import repositories.UnitRepository;
+import services.base.AbstractService;
+import services.interfaces.UnitService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -14,12 +16,12 @@ import javax.transaction.Transactional;
 @Named
 @Singleton
 @Transactional
-public class UnitService extends AbstractService<Unit,Long>
+public class UnitServiceImpl extends AbstractService<Unit,Long> implements UnitService
 {
 	UnitRepository unitRepository;
 
 	@Autowired
-	public UnitService( UnitRepository unitRepository )
+	public UnitServiceImpl (UnitRepository unitRepository)
 	{
 		super( unitRepository );
 		this.unitRepository = unitRepository;

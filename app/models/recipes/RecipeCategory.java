@@ -1,9 +1,8 @@
 package models.recipes;
 
-import models.AbstractEntity;
+import models.base.AbstractEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**

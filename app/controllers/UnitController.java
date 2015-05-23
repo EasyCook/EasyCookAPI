@@ -1,8 +1,9 @@
 package controllers;
 
-import services.UnitService;
+import controllers.base.BaseCrudController;
 import models.recipes.Unit;
 import org.springframework.beans.factory.annotation.Autowired;
+import services.interfaces.UnitService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -14,12 +15,12 @@ import javax.inject.Singleton;
 @Singleton
 public class UnitController extends BaseCrudController<Unit>
 {
-	UnitService unitDAO;
+	UnitService unitService;
 
 	@Autowired
-	public UnitController( UnitService unitDAO )
+	public UnitController( UnitService unitService )
 	{
-		super( unitDAO, Unit.class );
-		this.unitDAO = unitDAO;
+		super( unitService);
+		this.unitService = unitService;
 	}
 }

@@ -1,19 +1,17 @@
 package controllers;
 
+import controllers.base.BaseCrudController;
 import dtos.RecipeDTO;
 import models.recipes.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import play.data.Form;
 import play.mvc.Result;
-import services.RecipeService;
-import services.UnitService;
+import services.interfaces.RecipeService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static play.libs.Json.toJson;
 
@@ -31,7 +29,7 @@ public class RecipeController extends BaseCrudController< Recipe >
 	@Autowired
 	public RecipeController( RecipeService recipeService )
 	{
-		super( recipeService, Recipe.class );
+		super( recipeService);
 		this.recipeService = recipeService;
 	}
 

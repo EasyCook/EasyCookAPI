@@ -1,15 +1,20 @@
-package controllers;
+package controllers.base;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.hibernate.exception.ConstraintViolationException;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import services.AbstractService;
-import services.NotFoundException;
+import services.exceptions.NotFoundException;
+import services.base.GenericService;
 
+import javax.persistence.PersistenceException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Constants.StatusCode.COULT_NOT_DELETE;
 import static Constants.StatusCode.COULT_NOT_UPDATE;
 import static play.libs.Json.fromJson;
 import static play.libs.Json.toJson;
@@ -21,14 +26,17 @@ import static play.libs.Json.toJson;
 public abstract class BaseCrudController < T > extends Controller
 {
 
-	protected AbstractService< T, Long > service;
+	protected GenericService< T, Long > service;
 	private Class< T >                 clazz;
-	private List< T > bulkInsert = new ArrayList<>();
+    private Class< ? >                 updateClazz;
 
-	public BaseCrudController( AbstractService< T, Long > service, Class< T > clazz )
+	public BaseCrudController( GenericService< T, Long > service )
 	{
-		this.clazz = clazz;
+        Type t = getClass().getGenericSuperclass();
+        ParameterizedType pt = (ParameterizedType) t;
+        clazz = (Class) pt.getActualTypeArguments()[0];
 		this.service = service;
+        setUpdateClass(clazz);
 
 	}
 
@@ -66,9 +74,6 @@ public abstract class BaseCrudController < T > extends Controller
 			T object = fromJson( jsonNode, clazz );
 			objects.add( object );
 		}
-
-
-
 		service.save( objects );
 
 		return ok( toJson( objects ) );
@@ -76,13 +81,13 @@ public abstract class BaseCrudController < T > extends Controller
 
 	public Result update( Long id )
 	{
-		Form< T > form = Form.form( clazz ).bindFromRequest();
+		Form< ? > form = Form.form( getUpdateClass() ).bindFromRequest();
 		if( form.hasErrors() )
 		{
 			return badRequest();
 		}
 
-		T object = form.get();
+		Object object = form.get();
 
 		try
 		{
@@ -99,21 +104,14 @@ public abstract class BaseCrudController < T > extends Controller
 
 	public Result delete( Long id )
 	{
-		Form< T > form = Form.form( clazz ).bindFromRequest();
-		if( form.hasErrors() )
-		{
-			return badRequest();
-		}
-
-		T object = form.get();
-
 		try
 		{
 			service.delete( id );
 		}
-		catch( NotFoundException e )
+		catch( Exception e )
+
 		{
-			return status( COULT_NOT_UPDATE, "Could not update" );
+			return status( COULT_NOT_DELETE, "Could not delete" );
 		}
 
 		return ok();
@@ -121,8 +119,17 @@ public abstract class BaseCrudController < T > extends Controller
 
 	public void objectMapper( Object src, Object target )
 	{
-		service.myCopyProperties( src, target );
+		service.copyProperties(src, target);
 	}
 
 
+    public void setUpdateClass(Class<?> clazz)
+    {
+        this.updateClazz = clazz;
+    }
+
+    public Class<?> getUpdateClass()
+    {
+        return this.updateClazz;
+    }
 }

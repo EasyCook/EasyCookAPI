@@ -1,6 +1,6 @@
 package models.recipes;
 
-import models.AbstractEntity;
+import models.base.AbstractEntity;
 
 import javax.persistence.Entity;
 

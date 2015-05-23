@@ -108,4 +108,6 @@ public class Global extends GlobalSettings
             return new JpaTransactionManager();
         }
     }
+
+
 }

@@ -3,7 +3,6 @@ package security;
 
 import Constants.StatusCode;
 import Constants.UserLoginStatus;
-import services.UserService;
 import models.security.Token;
 import models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import play.mvc.Http;
 import play.mvc.Http.Context;
 import play.mvc.Result;
 import repositories.TokenRepository;
+import services.interfaces.UserService;
 
 import javax.inject.Named;
 
@@ -25,13 +25,13 @@ public class TokenAuthAction extends Action.Simple
 
 
 	public TokenRepository tokenRepository;
-	public UserService     userDAO;
+	public UserService userService;
 
 	@Autowired
-	public TokenAuthAction( UserService userDAO, TokenRepository tokenRepository )
+	public TokenAuthAction( UserService userService, TokenRepository tokenRepository )
 	{
 		this.tokenRepository = tokenRepository;
-		this.userDAO = userDAO;
+		this.userService = userService;
 	}
 
 	public static User getUser()
@@ -53,7 +53,7 @@ public class TokenAuthAction extends Action.Simple
             token = tokenRepository.findUserByAuthToken(authTokenHeaderValues[0]);
             if (token != null)
             {
-	            token = userDAO.checkIfExpired( token );
+	            token = userService.checkIfExpired( token );
                 UserLoginStatus status = token.status;
                 if (status == UserLoginStatus.ACTIVE)
                 {

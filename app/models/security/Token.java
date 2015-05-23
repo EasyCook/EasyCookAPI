@@ -1,7 +1,7 @@
 package models.security;
 
 import Constants.UserLoginStatus;
-import models.AbstractEntity;
+import models.base.AbstractEntity;
 import models.user.User;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

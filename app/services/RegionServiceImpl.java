@@ -4,6 +4,8 @@ import models.recipes.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import repositories.RegionRepository;
+import services.base.AbstractService;
+import services.interfaces.RegionService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -14,12 +16,12 @@ import javax.inject.Singleton;
 @Named
 @Singleton
 @Transactional
-public class RegionService extends AbstractService<Region,Long>
+public class RegionServiceImpl extends AbstractService<Region,Long> implements RegionService
 {
 	RegionRepository regionRepository;
 
 	@Autowired
-	public RegionService( RegionRepository regionRepository )
+	public RegionServiceImpl (RegionRepository regionRepository)
 	{
 		super( regionRepository );
 		this.regionRepository = regionRepository;
