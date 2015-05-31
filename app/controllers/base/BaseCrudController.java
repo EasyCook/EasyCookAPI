@@ -1,14 +1,12 @@
 package controllers.base;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.hibernate.exception.ConstraintViolationException;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import services.exceptions.NotFoundException;
 import services.base.GenericService;
+import services.exceptions.NotFoundException;
 
-import javax.persistence.PersistenceException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -23,38 +21,37 @@ import static play.libs.Json.toJson;
  * Created by eduardo on 12/03/15.
  */
 
-public abstract class BaseCrudController < T > extends Controller
-{
+public abstract class BaseCrudController < T > extends Controller {
 
 	protected GenericService< T, Long > service;
-	private Class< T >                 clazz;
-    private Class< ? >                 updateClazz;
+	private   Class< T >                clazz;
+	private   Class< ? >                updateClazz;
 
-	public BaseCrudController( GenericService< T, Long > service )
-	{
-        Type t = getClass().getGenericSuperclass();
-        ParameterizedType pt = (ParameterizedType) t;
-        clazz = (Class) pt.getActualTypeArguments()[0];
+	public BaseCrudController( GenericService< T, Long > service ) {
+		Type t = getClass().getGenericSuperclass();
+		ParameterizedType pt = ( ParameterizedType ) t;
+		clazz = ( Class ) pt.getActualTypeArguments()[0];
 		this.service = service;
-        setUpdateClass(clazz);
+		setUpdateClass( clazz );
 
 	}
 
-	public Result get( Long id )
-	{
-		return ok( toJson( service.findById( id ) ) );
+	public Result get( Long id ) {
+		T result = ( T ) service.findById( id );
+		if ( result != null ) {
+			return ok( toJson( result ) );
+		} else {
+			return notFound();
+		}
 	}
 
-	public Result getAll()
-	{
+	public Result getAll() {
 		return ok( toJson( service.findAll() ) );
 	}
 
-	public Result create()
-	{
+	public Result create() {
 		Form< T > form = Form.form( clazz ).bindFromRequest();
-		if( form.hasErrors() )
-		{
+		if ( form.hasErrors() ) {
 			return badRequest();
 		}
 
@@ -64,13 +61,11 @@ public abstract class BaseCrudController < T > extends Controller
 		return ok( toJson( object ) );
 	}
 
-	public Result createAll()
-	{
+	public Result createAll() {
 		JsonNode json = request().body().asJson();
-		final List<T> objects = new ArrayList<>();
+		final List< T > objects = new ArrayList<>();
 
-		for( JsonNode jsonNode : json )
-		{
+		for ( JsonNode jsonNode : json ) {
 			T object = fromJson( jsonNode, clazz );
 			objects.add( object );
 		}
@@ -79,22 +74,17 @@ public abstract class BaseCrudController < T > extends Controller
 		return ok( toJson( objects ) );
 	}
 
-	public Result update( Long id )
-	{
+	public Result update( Long id ) {
 		Form< ? > form = Form.form( getUpdateClass() ).bindFromRequest();
-		if( form.hasErrors() )
-		{
+		if ( form.hasErrors() ) {
 			return badRequest();
 		}
 
 		Object object = form.get();
 
-		try
-		{
+		try {
 			object = service.update( id, object );
-		}
-		catch( NotFoundException e )
-		{
+		} catch ( NotFoundException e ) {
 			return status( COULT_NOT_UPDATE, "Could not update" );
 		}
 
@@ -102,13 +92,10 @@ public abstract class BaseCrudController < T > extends Controller
 
 	}
 
-	public Result delete( Long id )
-	{
-		try
-		{
+	public Result delete( Long id ) {
+		try {
 			service.delete( id );
-		}
-		catch( Exception e )
+		} catch ( Exception e )
 
 		{
 			return status( COULT_NOT_DELETE, "Could not delete" );
@@ -117,19 +104,16 @@ public abstract class BaseCrudController < T > extends Controller
 		return ok();
 	}
 
-	public void objectMapper( Object src, Object target )
-	{
-		service.copyProperties(src, target);
+	public void objectMapper( Object src, Object target ) {
+		service.copyProperties( src, target );
 	}
 
 
-    public void setUpdateClass(Class<?> clazz)
-    {
-        this.updateClazz = clazz;
-    }
+	public void setUpdateClass( Class< ? > clazz ) {
+		this.updateClazz = clazz;
+	}
 
-    public Class<?> getUpdateClass()
-    {
-        return this.updateClazz;
-    }
+	public Class< ? > getUpdateClass() {
+		return this.updateClazz;
+	}
 }

@@ -1,9 +1,11 @@
 package services.interfaces;
 
+import dtos.IngredientDTO;
 import dtos.RecipeDTO;
 import models.recipes.Category;
 import models.recipes.Ingredient;
 import models.recipes.Recipe;
+import models.recipes.RecipeIngredient;
 import models.recipes.RecipeStep;
 import services.base.GenericService;
 
@@ -23,13 +25,13 @@ public interface RecipeService extends GenericService<Recipe, Long>
 
     public boolean addIngredient (Long recipeId, Long ingredientId);
 
-    public boolean addIngredients (Long recipeId, List<Long> ingredients);
+    public boolean addIngredients (Long recipeId, List< IngredientDTO> ingredients);
 
     public boolean addSteps (Long recipeId, List<RecipeStep> steps);
 
     public Optional<Long> createRecipe (RecipeDTO recipeDTO);
 
-    public List<Ingredient> getRecipeIngredients (Long recipeId);
+    public List< RecipeIngredient > getRecipeIngredients( Long recipeId );
 
     public List<RecipeStep> getRecipeSteps (Long recipeId);
 

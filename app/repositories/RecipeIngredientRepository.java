@@ -15,6 +15,6 @@ import java.util.List;
 @Named
 @Singleton
 public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient,Long> {
-	@Query("select i.ingredient from RecipeIngredient i where i.recipe.id = ?1")
-	public List<Ingredient> getRecipeIngredients(Long id);
+	@Query("select i from RecipeIngredient i where i.recipe.id = ?1")
+	public List<RecipeIngredient> getRecipeIngredients(Long id);
 }

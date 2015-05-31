@@ -50,25 +50,14 @@ public class RecipeDTO
 	Integer            calories;
 	Long               cookingTime;
 	Unit               timeUnit;
-	Unit               ingredientUnit;
 	User               user;
 	List< RecipeStep > steps;
-	List< Ingredient > ingredients;
+	List< IngredientDTO > ingredients;
 
 
-	public void setIngredients( List< Ingredient > ingredients )
+	public void setIngredients( List< IngredientDTO > ingredients )
 	{
 		this.ingredients = ingredients;
-	}
-
-	public Unit getIngredientUnit()
-	{
-		return ingredientUnit;
-	}
-
-	public void setIngredientUnit( Unit ingredientUnit )
-	{
-		this.ingredientUnit = ingredientUnit;
 	}
 
 	public Long getId()
@@ -181,7 +170,7 @@ public class RecipeDTO
 		this.user = user;
 	}
 
-	public List< Ingredient > getIngredients()
+	public List< IngredientDTO > getIngredients()
 	{
 		return ingredients;
 	}

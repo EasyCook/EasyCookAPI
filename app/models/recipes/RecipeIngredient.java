@@ -10,47 +10,50 @@ import javax.persistence.OneToOne;
 /**
  * Created by eduardo on 13/02/15.
  */
-@SuppressWarnings("serial")
+@SuppressWarnings( "serial" )
 @Entity
-public class RecipeIngredient extends AbstractEntity
-{
-    @ManyToOne
-    Ingredient ingredient;
+public class RecipeIngredient extends AbstractEntity {
+	@ManyToOne
+	Ingredient ingredient;
 
-    @OneToOne
-    Unit ingredientUnit;
+	@OneToOne
+	Unit ingredientUnit;
 
-    @ManyToOne
-    @JsonIgnore
-    Recipe recipe;
+	@ManyToOne
+	@JsonIgnore
+	Recipe recipe;
 
-	public Ingredient getIngredient()
-	{
+	Long amount;
+
+	public Long getAmount() {
+		return amount;
+	}
+
+	public void setAmount( Long amount ) {
+		this.amount = amount;
+	}
+
+	public Ingredient getIngredient() {
 		return ingredient;
 	}
 
-	public void setIngredient( Ingredient ingredient )
-	{
+	public void setIngredient( Ingredient ingredient ) {
 		this.ingredient = ingredient;
 	}
 
-	public Recipe getRecipe()
-	{
+	public Recipe getRecipe() {
 		return recipe;
 	}
 
-	public void setRecipe( Recipe recipe )
-	{
+	public void setRecipe( Recipe recipe ) {
 		this.recipe = recipe;
 	}
 
-    public Unit getIngredientUnit ()
-    {
-        return ingredientUnit;
-    }
+	public Unit getIngredientUnit() {
+		return ingredientUnit;
+	}
 
-    public void setIngredientUnit (Unit ingredientUnit)
-    {
-        this.ingredientUnit = ingredientUnit;
-    }
+	public void setIngredientUnit( Unit ingredientUnit ) {
+		this.ingredientUnit = ingredientUnit;
+	}
 }

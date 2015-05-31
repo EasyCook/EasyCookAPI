@@ -24,7 +24,7 @@ import static play.libs.Json.toJson;
 public class RecipeController extends BaseCrudController< Recipe >
 {
 	RecipeService recipeService;
-	Form< RecipeDTO > recipeDTOForm = Form.form( RecipeDTO.class );
+
 
 	@Autowired
 	public RecipeController( RecipeService recipeService )
@@ -36,6 +36,8 @@ public class RecipeController extends BaseCrudController< Recipe >
 	@Override
 	public Result create()
 	{
+
+		Form< RecipeDTO > recipeDTOForm = Form.form( RecipeDTO.class ).bindFromRequest();;
 		recipeDTOForm = recipeDTOForm.bindFromRequest();
 
 		if( recipeDTOForm.hasErrors() )
@@ -64,7 +66,6 @@ public class RecipeController extends BaseCrudController< Recipe >
 		{
 			return notFound();
 		}
-
         RecipeDTO recipeDTO = recipeService.getRecipeDTO(recipe);
 
 		return ok( toJson( recipeDTO ) );

@@ -1,11 +1,24 @@
 package services;
 
+import dtos.IngredientDTO;
 import dtos.RecipeDTO;
-import models.recipes.*;
+import models.recipes.Category;
+import models.recipes.Ingredient;
+import models.recipes.Recipe;
+import models.recipes.RecipeCategory;
+import models.recipes.RecipeIngredient;
+import models.recipes.RecipeStep;
+import models.recipes.Unit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
-import repositories.*;
+import repositories.CategoryRepository;
+import repositories.IngredientRepository;
+import repositories.RecipeCategoryRepository;
+import repositories.RecipeIngredientRepository;
+import repositories.RecipeRepository;
+import repositories.RecipeStepRepository;
+import repositories.UnitRepository;
 import services.base.AbstractService;
 import services.interfaces.RecipeService;
 
@@ -22,215 +35,233 @@ import java.util.stream.Collectors;
 @Named
 @Singleton
 @Transactional
-public class RecipeServiceImpl extends AbstractService<Recipe, Long> implements RecipeService
-{
-    RecipeRepository recipeRepository;
-    CategoryRepository categoryRepository;
-    RecipeCategoryRepository recipeCategoryRepository;
-    IngredientRepository ingredientRepository;
-    RecipeIngredientRepository recipeIngredientRepository;
-    RecipeStepRepository recipeStepRepository;
-    UnitRepository unitRepository;
+public class RecipeServiceImpl extends AbstractService< Recipe, Long > implements RecipeService {
+	RecipeRepository           recipeRepository;
+	CategoryRepository         categoryRepository;
+	RecipeCategoryRepository   recipeCategoryRepository;
+	IngredientRepository       ingredientRepository;
+	RecipeIngredientRepository recipeIngredientRepository;
+	RecipeStepRepository       recipeStepRepository;
+	UnitRepository             unitRepository;
 
-    @Autowired
-    public RecipeServiceImpl (JpaRepository<Recipe, Long> repo, IngredientRepository ingredientRepository, RecipeRepository recipeRepository,
-                              RecipeCategoryRepository recipeCategoryRepository, CategoryRepository categoryRepository,
-                              RecipeIngredientRepository recipeIngredientRepository, RecipeStepRepository recipeStepRepository, UnitRepository unitRepository)
-    {
-        super(repo);
-        this.recipeRepository = recipeRepository;
-        this.recipeCategoryRepository = recipeCategoryRepository;
-        this.categoryRepository = categoryRepository;
-        this.ingredientRepository = ingredientRepository;
-        this.recipeIngredientRepository = recipeIngredientRepository;
-        this.recipeStepRepository = recipeStepRepository;
-        this.unitRepository = unitRepository;
-    }
+	@Autowired
+	public RecipeServiceImpl( JpaRepository< Recipe, Long > repo, IngredientRepository ingredientRepository, RecipeRepository recipeRepository,
+	                          RecipeCategoryRepository recipeCategoryRepository, CategoryRepository categoryRepository,
+	                          RecipeIngredientRepository recipeIngredientRepository, RecipeStepRepository recipeStepRepository,
+	                          UnitRepository unitRepository ) {
+		super( repo );
+		this.recipeRepository = recipeRepository;
+		this.recipeCategoryRepository = recipeCategoryRepository;
+		this.categoryRepository = categoryRepository;
+		this.ingredientRepository = ingredientRepository;
+		this.recipeIngredientRepository = recipeIngredientRepository;
+		this.recipeStepRepository = recipeStepRepository;
+		this.unitRepository = unitRepository;
+	}
 
-    public List<Category> getCategories (Long id)
-    {
-        return recipeCategoryRepository.getCategoryByRecipeId(id);
-    }
+	public List< Category > getCategories( Long id ) {
+		return recipeCategoryRepository.getCategoryByRecipeId( id );
+	}
 
-    public boolean addCategory (Long recipeId, Long categoryId)
-    {
-        Recipe recipe = recipeRepository.findOne(recipeId);
-        Category category = categoryRepository.findOne(categoryId);
-        if (category == null)
-        {
-            return false;
-        }
+	public boolean addCategory( Long recipeId, Long categoryId ) {
 
-        RecipeCategory recipeCategory = new RecipeCategory();
-        recipeCategory.setRecipe(recipe);
-        recipeCategory.setCategory(category);
+		Recipe recipe = recipeRepository.findOne( recipeId );
+		Category category = categoryRepository.findOne( categoryId );
 
-        recipeCategoryRepository.save(recipeCategory);
+		if ( category == null ) {
+			return false;
+		}
 
-        return true;
-    }
+		RecipeCategory recipeCategory = new RecipeCategory();
+		recipeCategory.setRecipe( recipe );
+		recipeCategory.setCategory( category );
 
-    public boolean addCategories (Long recipeId, List<Long> categories)
-    {
-        List<RecipeCategory> recipeCategories = new ArrayList<>();
-        Recipe recipe = recipeRepository.findOne(recipeId);
-        for (Long categoryId : categories)
-        {
-            Category category = categoryRepository.findOne(categoryId);
+		recipeCategoryRepository.save( recipeCategory );
 
-            if (category == null)
-            {
-                return false;
-            }
+		return true;
+	}
 
-            RecipeCategory recipeCategory = new RecipeCategory();
-            recipeCategory.setRecipe(recipe);
-            recipeCategory.setCategory(category);
-            recipeCategories.add(recipeCategory);
-        }
+	public boolean addCategories( Long recipeId, List< Long > categories ) {
 
-        recipeCategoryRepository.save(recipeCategories);
+		List< RecipeCategory > recipeCategories = new ArrayList<>();
+		Recipe recipe = recipeRepository.findOne( recipeId );
 
-        return true;
-    }
+		for ( Long categoryId : categories ) {
 
-    public boolean addIngredient (Long recipeId, Long ingredientId)
-    {
-        Recipe recipe = recipeRepository.findOne(recipeId);
-        Ingredient ingredient = ingredientRepository.findOne(ingredientId);
+			Category category = categoryRepository.findOne( categoryId );
 
-        if (ingredient == null)
-        {
-            return false;
-        }
-        RecipeIngredient recipeIngredient = new RecipeIngredient();
-        recipeIngredient.setIngredient(ingredient);
-        recipeIngredient.setRecipe(recipe);
-        recipeIngredientRepository.save(recipeIngredient);
+			if ( category == null ) {
+				return false;
+			}
 
-        return true;
-    }
+			RecipeCategory recipeCategory = new RecipeCategory();
+			recipeCategory.setRecipe( recipe );
+			recipeCategory.setCategory( category );
+			recipeCategories.add( recipeCategory );
 
-    public boolean addIngredients (Long recipeId, List<Long> ingredients)
-    {
-        List<RecipeIngredient> recipeIngredients = new ArrayList<>();
-        Recipe recipe = recipeRepository.findOne(recipeId);
-        for (Long ingredientId : ingredients)
-        {
-            Ingredient ingredient = ingredientRepository.findOne(ingredientId);
-            if (ingredient == null)
-            {
-                return false;
-            }
-            RecipeIngredient recipeIngredient = new RecipeIngredient();
-            recipeIngredient.setIngredient(ingredient);
-            recipeIngredient.setRecipe(recipe);
-            recipeIngredients.add(recipeIngredient);
-        }
+		}
 
-        recipeIngredientRepository.save(recipeIngredients);
+		recipeCategoryRepository.save( recipeCategories );
 
-        return true;
-    }
+		return true;
+	}
 
-    public boolean addSteps (Long recipeId, List<RecipeStep> steps)
-    {
-        List<RecipeStep> recipeSteps = new ArrayList<>();
-        final Recipe recipe = recipeRepository.findOne(recipeId);
+	public boolean addIngredient( Long recipeId, Long ingredientId ) {
 
-        if (recipe == null)
-        {
-            return false;
-        }
+		Recipe recipe = recipeRepository.findOne( recipeId );
+		Ingredient ingredient = ingredientRepository.findOne( ingredientId );
 
-        steps.forEach(step -> step.setRecipe(recipe));
+		if ( ingredient == null ) {
+			return false;
+		}
 
-        recipeStepRepository.save(steps);
+		RecipeIngredient recipeIngredient = new RecipeIngredient();
+		recipeIngredient.setIngredient( ingredient );
+		recipeIngredient.setRecipe( recipe );
+		recipeIngredientRepository.save( recipeIngredient );
 
-        return true;
-    }
+		return true;
+	}
 
-    public Optional<Long> createRecipe ( RecipeDTO recipeDTO)
-    {
-        List< Ingredient > ingredients = recipeDTO.getIngredients();
-        List< RecipeStep > recipeSteps = recipeDTO.getSteps();
-        Unit timeU = unitRepository.findOne(recipeDTO.getTimeUnit().getId());
+	public boolean addIngredients( Long recipeId, List< IngredientDTO > ingredients ) {
 
-        Recipe recipe = new Recipe();
-        recipe.setCalories( recipeDTO.getCalories() );
-        recipe.setDescription( recipeDTO.getDescription() );
-        recipe.setDifficulty( recipeDTO.getDifficulty() );
-        recipe.setPortion( recipeDTO.getPortion() );
-        recipe.setThumbnail( recipeDTO.getThumbnail() );
-        recipe.setTitle( recipeDTO.getTitle() );
-        recipe.setTime( recipeDTO.getCookingTime() );
-        recipe.setTimeUnit(timeU);
+		List< RecipeIngredient > recipeIngredients = new ArrayList<>();
+		Recipe recipe = recipeRepository.findOne( recipeId );
 
-        recipe = recipeRepository.save(recipe);
+		for ( IngredientDTO ingredient : ingredients ) {
 
-        if (recipe.getId() == null)
-        {
-            return Optional.empty();
-        }
+			Ingredient ing = ingredientRepository.findOne( ingredient.getId() );
 
-        if (addIngredients(recipe.getId(), ingredients.stream().map(i -> i.getId()).collect(Collectors.toList())))
-        {
-            if (addSteps(recipe.getId(), recipeSteps))
-            {
-                return Optional.of(recipe.getId());
-            }
+			if ( ing == null ) {
+				return false;
+			}
 
-            return Optional.empty();
-
-        }
-
-        return Optional.empty();
-    }
-
-    public List<Ingredient> getRecipeIngredients (Long recipeId)
-    {
-        List<Ingredient> ingredients = recipeIngredientRepository.getRecipeIngredients(recipeId);
-        return ingredients;
-    }
-
-    public List<RecipeStep> getRecipeSteps (Long recipeId)
-    {
-        List<RecipeStep> recipeSteps = recipeStepRepository.findByRecipeId(recipeId);
-        return recipeSteps;
-    }
+			RecipeIngredient recipeIngredient = new RecipeIngredient();
+			recipeIngredient.setIngredient( ing );
+			recipeIngredient.setRecipe( recipe );
+			recipeIngredient.setAmount( ingredient.getAmount() );
 
 
-    public RecipeDTO getRecipeDTO (Recipe recipe)
-    {
-        RecipeDTO recipeDTO = new RecipeDTO();
-        recipeDTO.setCalories( recipe.getCalories() );
-        recipeDTO.setCookingTime( recipe.getTime() );
-        recipeDTO.setDescription( recipe.getDescription() );
-        recipeDTO.setDifficulty( recipe.getDifficulty() );
-        recipeDTO.setId( recipe.getId() );
-        recipeDTO.setTimeUnit( recipe.getTimeUnit() );
-        recipeDTO.setPortion( recipe.getPortion() );
-        recipeDTO.setThumbnail( recipe.getThumbnail() );
-        recipeDTO.setTitle( recipe.getTitle() );
+			if ( ingredient.getIngredientUnit() != null ) {
 
-        recipeDTO.setUser( recipe.getUser() );
+				Unit ingredientUnit = unitRepository.findOne( ingredient.getIngredientUnit().getId() );
 
-        List<RecipeStep> steps = getRecipeSteps(recipe.getId());
-        recipeDTO.setSteps( steps );
+				if ( ingredientUnit != null && ingredientUnit.getId() != null ) {
+					recipeIngredient.setIngredientUnit( ingredientUnit );
+				}
 
-        List<Ingredient> ingredients = getRecipeIngredients(recipe.getId());
-        recipeDTO.setIngredients( ingredients );
-        return recipeDTO;
-    }
+			}
 
-    public List<RecipeDTO> getRecipeDTO(List<Recipe> recipes)
-    {
-        List<RecipeDTO> recipeDTOs = new ArrayList<>();
-        for (Recipe recipe : recipes)
-        {
-            recipeDTOs.add(getRecipeDTO(recipe));
-        }
 
-        return recipeDTOs;
-    }
+			recipeIngredients.add( recipeIngredient );
+
+		}
+
+		recipeIngredientRepository.save( recipeIngredients );
+
+		return true;
+	}
+
+	public boolean addSteps( Long recipeId, List< RecipeStep > steps ) {
+
+		List< RecipeStep > recipeSteps = new ArrayList<>();
+		final Recipe recipe = recipeRepository.findOne( recipeId );
+
+		if ( recipe == null ) {
+			return false;
+		}
+
+		steps.forEach( step -> step.setRecipe( recipe ) );
+
+		recipeStepRepository.save( steps );
+
+		return true;
+	}
+
+	public Optional< Long > createRecipe( RecipeDTO recipeDTO ) {
+
+		List< IngredientDTO > ingredients = recipeDTO.getIngredients();
+		List< RecipeStep > recipeSteps = recipeDTO.getSteps();
+		Unit timeU = unitRepository.findOne( recipeDTO.getTimeUnit().getId() );
+
+		Recipe recipe = new Recipe();
+		recipe.setCalories( recipeDTO.getCalories() );
+		recipe.setDescription( recipeDTO.getDescription() );
+		recipe.setDifficulty( recipeDTO.getDifficulty() );
+		recipe.setPortion( recipeDTO.getPortion() );
+		recipe.setThumbnail( recipeDTO.getThumbnail() );
+		recipe.setTitle( recipeDTO.getTitle() );
+		recipe.setTime( recipeDTO.getCookingTime() );
+
+		if ( timeU != null && timeU.getId() != null ) {
+			recipe.setTimeUnit( timeU );
+		}
+
+		recipe = recipeRepository.save( recipe );
+
+		if ( recipe.getId() == null ) {
+			return Optional.empty();
+		}
+
+		if ( addIngredients( recipe.getId(), ingredients ) ) {
+			if ( addSteps( recipe.getId(), recipeSteps ) ) {
+				return Optional.of( recipe.getId() );
+			}
+
+			return Optional.empty();
+
+		}
+
+		return Optional.empty();
+	}
+
+	public List< RecipeIngredient > getRecipeIngredients( Long recipeId ) {
+		List< RecipeIngredient > ingredients = recipeIngredientRepository.getRecipeIngredients( recipeId );
+		return ingredients;
+	}
+
+	public List< RecipeStep > getRecipeSteps( Long recipeId ) {
+		List< RecipeStep > recipeSteps = recipeStepRepository.findByRecipeId( recipeId );
+		return recipeSteps;
+	}
+
+
+	public RecipeDTO getRecipeDTO( Recipe recipe ) {
+		RecipeDTO recipeDTO = new RecipeDTO();
+		recipeDTO.setCalories( recipe.getCalories() );
+		recipeDTO.setCookingTime( recipe.getTime() );
+		recipeDTO.setDescription( recipe.getDescription() );
+		recipeDTO.setDifficulty( recipe.getDifficulty() );
+		recipeDTO.setId( recipe.getId() );
+		recipeDTO.setTimeUnit( recipe.getTimeUnit() );
+		recipeDTO.setPortion( recipe.getPortion() );
+		recipeDTO.setThumbnail( recipe.getThumbnail() );
+		recipeDTO.setTitle( recipe.getTitle() );
+
+		recipeDTO.setUser( recipe.getUser() );
+
+		List< RecipeStep > steps = getRecipeSteps( recipe.getId() );
+		recipeDTO.setSteps( steps );
+
+		recipeDTO.setIngredients( getRecipeIngredients( recipe.getId() ).stream().map( ( i ) -> {
+			IngredientDTO ingredientDTO = new IngredientDTO();
+			ingredientDTO.setAmount( i.getAmount() );
+			ingredientDTO.setIngredientUnit( i.getIngredientUnit() );
+			ingredientDTO.setId( i.getId() );
+			ingredientDTO.setName( i.getIngredient().getName() );
+			ingredientDTO.setDescription( i.getIngredient().getDescription() );
+			return ingredientDTO;
+		} ).collect( Collectors.toList() ) );
+
+		return recipeDTO;
+	}
+
+	public List< RecipeDTO > getRecipeDTO( List< Recipe > recipes ) {
+		List< RecipeDTO > recipeDTOs = new ArrayList<>();
+		for ( Recipe recipe : recipes ) {
+			recipeDTOs.add( getRecipeDTO( recipe ) );
+		}
+
+		return recipeDTOs;
+	}
 }

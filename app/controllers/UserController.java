@@ -13,21 +13,18 @@ import javax.inject.Singleton;
 @Named
 @Singleton
 @TokenAuth
-public class UserController extends BaseCrudController<User>
-{
+public class UserController extends BaseCrudController< User > {
 
 
 	UserService userService;
 
 
 	@Autowired
-	public UserController( UserService userService )
-	{
-        super(userService);
+	public UserController( UserService userService ) {
+		super( userService );
 		this.userService = userService;
-        setUpdateClass(UserDTO.class);
+		setUpdateClass( UserDTO.class );
 	}
-
 
 
 }

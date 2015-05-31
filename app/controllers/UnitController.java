@@ -13,14 +13,12 @@ import javax.inject.Singleton;
  */
 @Named
 @Singleton
-public class UnitController extends BaseCrudController<Unit>
-{
+public class UnitController extends BaseCrudController< Unit > {
 	UnitService unitService;
 
 	@Autowired
-	public UnitController( UnitService unitService )
-	{
-		super( unitService);
+	public UnitController( UnitService unitService ) {
+		super( unitService );
 		this.unitService = unitService;
 	}
 }
